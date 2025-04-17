@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .upload-container {
+            margin-bottom: 20px;
+        }
+        .upload-container input[type="file"] {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .upload-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .upload-container button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 15px;
+        }
+        .result h3 {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Upload an Image for Prediction</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="upload-container">
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </div>
+    </form>
+
+    {% if uploaded %}
+        <div class="result">
+            <h3>Prediction: {{ prediction }}</h3>
+            <img src="{{ image_url }}" alt="Uploaded Image">
+        </div>
+    {% endif %}
+
+</body>
+</html>
