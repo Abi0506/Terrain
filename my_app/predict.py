@@ -8,7 +8,7 @@ import torch.nn as nn
 
 class_names = [
     'AnnualCrop', 'Forest', 'HerbaceousVegetation', 'Highway', 'Industrial',
-    'Pasture', 'PermanentCrop', 'River', 'Residential', 'SeaLake'
+    'Pasture', 'PermanentCrop', 'Residential','River',  'SeaLake'
 ]
 
 def load_model():
