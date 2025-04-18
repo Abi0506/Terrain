@@ -7,62 +7,124 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            background-color: white;
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
         }
         h1 {
-            color: #333;
+            color: #4CAF50;
         }
-        .upload-container {
+        form {
             margin-bottom: 20px;
         }
-        .upload-container input[type="file"] {
+        input[type="file"] {
+            display: block;
+            margin: 0 auto 10px;
             padding: 10px;
-            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #fafafa;
         }
-        .upload-container button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        button {
             background-color: #4CAF50;
             color: white;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-        .upload-container button:hover {
+        button:hover {
             background-color: #45a049;
         }
-        .result {
-            margin-top: 20px;
-        }
-        .result img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 15px;
-        }
-        .result h3 {
-            font-size: 24px;
+        h2 {
             color: #333;
+        }
+        h3 {
+            color: #888;
+        }
+        .image-preview {
+            margin-top: 20px;
+            max-width: 100%;
+            max-height: 300px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Image Prediction</h1>
 
-    <h1>Upload an Image for Prediction</h1>
-
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="upload-container">
-            <input type="file" name="image" accept="image/*" required>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="image" accept="image/*" id="imageInput" onchange="previewImage()">
             <button type="submit">Predict</button>
-        </div>
-    </form>
+        </form>
 
-    {% if uploaded %}
-        <div class="result">
-            <h3>Prediction: {{ prediction }}</h3>
-            <img src="{{ image_url }}" alt="Uploaded Image">
+        <!-- Display image preview -->
+        <div id="imageContainer">
+            {% if image_url %}
+                <img class="image-preview" id="uploadedImage" src="{{ image_url }}" alt="Uploaded Image">
+            {% endif %}
         </div>
-    {% endif %}
 
+        {% if predicted_class %}
+            <h2>Prediction: {{ predicted_class }}</h2>
+            <h3>Confidence: {{ confidence }}%</h3>
+        {% endif %}
+    </div>
+
+    <!-- Pass Django variable to JS safely -->
+    <script>
+        const currentImageUrl = "{{ image_url|default:'' }}";
+    </script>
+
+    <script>
+        function previewImage() {
+            const file = document.getElementById("imageInput").files[0];
+            const reader = new FileReader();
+            const imageContainer = document.getElementById("imageContainer");
+
+            // Clear previous image
+            imageContainer.innerHTML = '';
+
+            reader.onloadend = function () {
+                const imagePreview = document.createElement("img");
+                imagePreview.src = reader.result;
+                imagePreview.classList.add("image-preview");
+                imageContainer.appendChild(imagePreview);
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Show previously uploaded image if it exists
+        window.onload = function () {
+            if (currentImageUrl) {
+                const imageContainer = document.getElementById("imageContainer");
+                const imagePreview = document.createElement("img");
+                imagePreview.src = currentImageUrl;
+                imagePreview.classList.add("image-preview");
+                imageContainer.appendChild(imagePreview);
+            }
+        }
+    </script>
 </body>
 </html>
