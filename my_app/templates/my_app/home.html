@@ -76,7 +76,7 @@
             <button type="submit">Predict</button>
         </form>
 
-        <!-- Display image preview -->
+        
         <div id="imageContainer">
             {% if image_url %}
                 <img class="image-preview" id="uploadedImage" src="{{ image_url }}" alt="Uploaded Image">
@@ -89,10 +89,8 @@
         {% endif %}
     </div>
 
-    <!-- Pass Django variable to JS safely -->
-    <script>
-        const currentImageUrl = "{{ image_url|default:'' }}";
-    </script>
+   
+   
 
     <script>
         function previewImage() {
@@ -100,7 +98,7 @@
             const reader = new FileReader();
             const imageContainer = document.getElementById("imageContainer");
 
-            // Clear previous image
+            
             imageContainer.innerHTML = '';
 
             reader.onloadend = function () {
@@ -115,16 +113,8 @@
             }
         }
 
-        // Show previously uploaded image if it exists
-        window.onload = function () {
-            if (currentImageUrl) {
-                const imageContainer = document.getElementById("imageContainer");
-                const imagePreview = document.createElement("img");
-                imagePreview.src = currentImageUrl;
-                imagePreview.classList.add("image-preview");
-                imageContainer.appendChild(imagePreview);
-            }
-        }
+        
+       
     </script>
 </body>
 </html>
